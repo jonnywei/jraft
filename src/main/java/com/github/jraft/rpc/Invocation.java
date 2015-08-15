@@ -3,16 +3,16 @@ package com.github.jraft.rpc;
 import java.util.Map;
 
 /**
- * TODO ÕâÀïĞ´×¢ÊÍ
- * date£º2015/8/14-17:11
- * author£ºweijianjun
- * Copyright (c) 2014³©ÓÎÌìÏÂ-°æÈ¨ËùÓĞ
+ * TODO è¿™é‡Œå†™æ³¨é‡Š
+ * dateï¼š2015/8/14-17:11
+ * authorï¼šweijianjun
+ * Copyright (c) 2014ç•…æ¸¸å¤©ä¸‹-ç‰ˆæƒæ‰€æœ‰
  */
 
 public interface Invocation {
 
     /**
-     * µ÷ÓÃµÄ·½·¨Ãû×Ö
+     * è°ƒç”¨çš„æ–¹æ³•åå­—
      * @return
      */
     String getMethodName();
@@ -24,7 +24,7 @@ public interface Invocation {
     Map<String, String > getAttachments();
 
     /**
-     * µÃµ½µ±Ç°µÄµ÷ÓÃÕß
+     * å¾—åˆ°å½“å‰çš„è°ƒç”¨è€…
      * @return
      */
     Invoker<?> getInvoker();

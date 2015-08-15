@@ -1,31 +1,31 @@
 package com.github.jraft.rpc;
 
 /**
- * TODO ÕâÀïĞ´×¢ÊÍ
- * date£º2015/8/14-17:17
- * author£ºweijianjun
- * Copyright (c) 2014³©ÓÎÌìÏÂ-°æÈ¨ËùÓĞ
+ * TODO è¿™é‡Œå†™æ³¨é‡Š
+ * dateï¼š2015/8/14-17:17
+ * authorï¼šweijianjun
+ * Copyright (c) 2014ç•…æ¸¸å¤©ä¸‹-ç‰ˆæƒæ‰€æœ‰
  */
 
 public interface Result {
 
 
     /**
-     * µÃµ½µ÷ÓÃµÄ½á¹û
+     * å¾—åˆ°è°ƒç”¨çš„ç»“æœ
      * @return
      */
     Object getValue();
 
 
     /**
-     * µÃµ½µ÷ÓÃµÄÒì³£
+     * å¾—åˆ°è°ƒç”¨çš„å¼‚å¸¸
      * @return
      */
     Throwable getException();
 
 
     /**
-     * ÊÇ·ñÓĞÒì³£Çé¿ö
+     * æ˜¯å¦æœ‰å¼‚å¸¸æƒ…å†µ
      * @return
      */
     boolean hasException();
