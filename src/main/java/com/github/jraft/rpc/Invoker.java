@@ -1,24 +1,24 @@
 package com.github.jraft.rpc;
 
 /**
- * TODO ÕâÀïÐ´×¢ÊÍ
- * date£º2015/8/14-17:15
- * author£ºweijianjun
- * Copyright (c) 2014³©ÓÎÌìÏÂ-°æÈ¨ËùÓÐ
+ * TODO ï¿½ï¿½ï¿½ï¿½Ð´×¢ï¿½ï¿½
+ * dateï¿½ï¿½2015/8/14-17:15
+ * authorï¿½ï¿½weijianjun
+ * Copyright (c) 2014ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½-ï¿½ï¿½È¨ï¿½ï¿½ï¿½ï¿½
  */
 
 public interface Invoker<T> {
 
 
     /**
-     * µÃµ½·þÎñµÄ½Ó¿Ú
+     * ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½Ä½Ó¿ï¿½
      * @return
      */
     Class<T> getInterface();
 
 
     /**
-     * µ÷ÓÃ
+     * ï¿½ï¿½ï¿½ï¿½
      */
-    Result invoke(Invocation invocation) ;
+    Result invoke(Invocation invocation)  throws RpcException;
 }

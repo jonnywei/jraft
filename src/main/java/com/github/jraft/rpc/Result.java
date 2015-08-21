@@ -30,4 +30,20 @@ public interface Result {
      */
     boolean hasException();
 
+
+    /**
+     * Recreate. 得到结果之后，重新复现结果或者抛出异常
+     *
+     * <code>
+     * if (hasException()) {
+     *     throw getException();
+     * } else {
+     *     return getValue();
+     * }
+     * </code>
+     *
+     * @return result.
+     * @throws if has exception throw it.
+     */
+    Object recreate() throws Throwable;
 }
