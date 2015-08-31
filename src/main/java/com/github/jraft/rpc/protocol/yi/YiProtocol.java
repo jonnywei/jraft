@@ -6,6 +6,7 @@ import com.github.jraft.rpc.Protocol;
 import com.github.jraft.rpc.RpcException;
 import com.github.jraft.rpc.protocol.RpcInvocation;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -16,10 +17,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * TODO ÕâÀïÐ´×¢ÊÍ
- * date£º2015/8/21-11:52
- * author£ºweijianjun
- * Copyright (c) 2014³©ÓÎÌìÏÂ-°æÈ¨ËùÓÐ
+ * TODO ï¿½ï¿½ï¿½ï¿½Ð´×¢ï¿½ï¿½
+ * dateï¿½ï¿½2015/8/21-11:52
+ * authorï¿½ï¿½weijianjun
+ * Copyright (c) 2014ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½-ï¿½ï¿½È¨ï¿½ï¿½ï¿½ï¿½
  */
 
 public class YiProtocol  implements Protocol{
@@ -72,9 +73,23 @@ public class YiProtocol  implements Protocol{
                             }
                             oos.flush();
 
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        } finally {
+                        } catch (EOFException e) {
+                            System.out.println("client disconnet, close");
+                            try {
+                                socket.close();
+                            } catch (Exception exx) {
+                                exx.printStackTrace();
+                            }
+                            break;
+                        }catch (Exception e) {
+                            System.out.println("client disconnet, close");
+                            try {
+                            socket.close();
+                            } catch (Exception exx) {
+                                exx.printStackTrace();
+                            }
+                        }
+                        finally {
                             try {
 //                            socket.close();
                             } catch (Exception e) {

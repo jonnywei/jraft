@@ -1,17 +1,17 @@
 package com.github.jraft.rpc;
 
 /**
- * TODO ÕâÀïĞ´×¢ÊÍ
- * date£º2015/8/21-11:44
- * author£ºweijianjun
- * Copyright (c) 2014³©ÓÎÌìÏÂ-°æÈ¨ËùÓĞ
+ * TODO ï¿½ï¿½ï¿½ï¿½Ğ´×¢ï¿½ï¿½
+ * dateï¿½ï¿½2015/8/21-11:44
+ * authorï¿½ï¿½weijianjun
+ * Copyright (c) 2014ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½-ï¿½ï¿½È¨ï¿½ï¿½ï¿½ï¿½
  */
 
 public interface Exporter<T> {
 
 
     /**
-     * µÃµ½Invoker¶ÔÏó
+     * ï¿½Ãµï¿½Invokerï¿½ï¿½ï¿½ï¿½
      * @return
      */
     Invoker<T> getInvoker();
