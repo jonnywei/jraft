@@ -15,7 +15,7 @@ import java.io.OutputStream;
 public class BioCodec implements Codec {
     @Override
     public void encode(OutputStream output, Object message) {
-
+        
     }
 
     @Override

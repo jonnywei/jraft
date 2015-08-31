@@ -1,5 +1,6 @@
 package com.github.jraft.remoting.exchange;
 
+import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -9,8 +10,9 @@ import java.util.concurrent.atomic.AtomicLong;
  * Copyright (c) 2014畅游天下-版权所有
  */
 
-public class Request {
+public class Request implements Serializable {
 
+    private static final long serialVersionUID = 6864185727048757354L;
 
     private  static final AtomicLong ATOMIC_LONG = new AtomicLong(0);
 
