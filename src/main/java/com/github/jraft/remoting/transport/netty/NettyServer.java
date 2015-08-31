@@ -1,6 +1,5 @@
-package com.github.jraft.remoting;
+package com.github.jraft.remoting.transport.netty;
 
-import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;

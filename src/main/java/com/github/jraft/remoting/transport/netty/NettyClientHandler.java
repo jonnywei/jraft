@@ -1,6 +1,5 @@
-package com.github.jraft.remoting;
+package com.github.jraft.remoting.transport.netty;
 
-import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOutboundHandlerAdapter;
 
