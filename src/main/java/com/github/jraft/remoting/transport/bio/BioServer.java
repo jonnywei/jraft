@@ -2,6 +2,7 @@ package com.github.jraft.remoting.transport.bio;
 
 import com.github.jraft.remoting.RemotingException;
 import com.github.jraft.remoting.Server;
+import com.github.jraft.remoting.exchange.Request;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -148,7 +149,16 @@ public class BioServer implements Server {
 
         @Override
         public void run() {
+            try {
+                BioCodec bioCodec = new BioCodec();
+                Object object = bioCodec.decode(socket.getInputStream());
+                if(object instanceof Request){
 
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

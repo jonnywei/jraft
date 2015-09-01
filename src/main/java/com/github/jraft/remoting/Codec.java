@@ -1,5 +1,6 @@
 package com.github.jraft.remoting;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -18,12 +19,12 @@ public interface Codec {
      * @param output
      * @param message
      */
-    void encode( OutputStream output, Object message);
+    void encode( OutputStream output, Object message) throws IOException;
 
     /**
      * 解码
      * @param inputStream
      * @return
      */
-    Object decode(InputStream inputStream);
+    Object decode(InputStream inputStream) throws IOException;
 }

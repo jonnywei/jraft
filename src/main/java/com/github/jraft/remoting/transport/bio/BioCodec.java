@@ -1,9 +1,10 @@
 package com.github.jraft.remoting.transport.bio;
 
 import com.github.jraft.remoting.Codec;
+import com.github.jraft.remoting.exchange.Request;
+import com.github.jraft.remoting.exchange.Response;
 
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 /**
  * TODO 这里写注释
@@ -14,12 +15,33 @@ import java.io.OutputStream;
 
 public class BioCodec implements Codec {
     @Override
-    public void encode(OutputStream output, Object message) {
-        
+    public void encode(OutputStream output, Object message) throws IOException {
+        ObjectOutputStream oos = new ObjectOutputStream(output);
+        if(message instanceof Request){
+            oos.writeObject(message);
+        }else if(message instanceof Response){
+            oos.writeObject(message);
+        }
+        oos.flush();
     }
 
     @Override
-    public Object decode(InputStream inputStream) {
-        return null;
+    public Object decode(InputStream input )throws IOException {
+
+        ObjectInputStream ois = new ObjectInputStream(input);
+        Object result;
+        try {
+             result = ois.readObject();
+        } catch (ClassNotFoundException e) {
+            throw  new IOException("decode error", e);
+        }
+        if(result instanceof Request){
+            return (Request) result;
+        }
+        else {
+            return (Response) result;
+
+        }
+
     }
 }

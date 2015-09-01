@@ -3,6 +3,7 @@ package com.github.jraft.remoting.transport.bio;
 import com.github.jraft.remoting.Client;
 import com.github.jraft.remoting.RemotingException;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -47,7 +48,12 @@ public class BioClient implements Client {
 
     @Override
     public void send(Object message) throws RemotingException {
-
+        BioCodec codec = new BioCodec();
+        try {
+            codec.encode(socket.getOutputStream(),message);
+        } catch (IOException e) {
+            throw new RemotingException("codec error", e);
+        }
     }
 
     @Override
