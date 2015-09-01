@@ -41,4 +41,16 @@ public class DefaultFuture implements ResponseFuture {
     public boolean isDone() {
         return false;
     }
+
+
+    private void doReceived(Response response){
+
+    }
+
+    public static void received( Response response) {
+        DefaultFuture future = FUTURES.remove(response.getId());
+        if(future != null){
+            future.doReceived(response);
+        }
+    }
 }

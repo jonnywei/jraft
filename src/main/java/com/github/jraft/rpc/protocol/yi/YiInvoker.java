@@ -1,5 +1,7 @@
 package com.github.jraft.rpc.protocol.yi;
 
+import com.github.jraft.remoting.exchange.ExchangeClient;
+import com.github.jraft.remoting.exchange.ResponseFuture;
 import com.github.jraft.rpc.Invocation;
 import com.github.jraft.rpc.Invoker;
 import com.github.jraft.rpc.Result;
@@ -11,20 +13,20 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 /**
- * TODO ÕâÀïÐ´×¢ÊÍ
- * date£º2015/8/21-14:43
- * author£ºweijianjun
- * Copyright (c) 2014³©ÓÎÌìÏÂ-°æÈ¨ËùÓÐ
+ * TODO ï¿½ï¿½ï¿½ï¿½Ð´×¢ï¿½ï¿½
+ * dateï¿½ï¿½2015/8/21-14:43
+ * authorï¿½ï¿½weijianjun
+ * Copyright (c) 2014ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½-ï¿½ï¿½È¨ï¿½ï¿½ï¿½ï¿½
  */
 
 public class YiInvoker<T>  implements Invoker<T> {
 
-    private  Socket socket ;
+    private ExchangeClient  client ;
 
     private Class<T>  type;
-    public YiInvoker(Class<T> type, Socket client){
+    public YiInvoker(Class<T> type, ExchangeClient client){
         this.type = type;
-        socket = client;
+        this.client = client;
     }
 
     @Override
@@ -43,12 +45,7 @@ public class YiInvoker<T>  implements Invoker<T> {
     }
 
     private Result doInvoke(Invocation invocation)  throws Throwable {
-        ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-        oos.writeUTF(getInterface().getName());
-        oos.writeObject(invocation);
-        oos.flush();
-        ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-        RpcResult object = (RpcResult) ois.readObject();
-        return object;
+        ResponseFuture responseFuture = client.request(invocation, 100);
+        return (Result) responseFuture.get();
     }
 }

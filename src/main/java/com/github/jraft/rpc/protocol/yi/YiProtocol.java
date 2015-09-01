@@ -1,9 +1,11 @@
 package com.github.jraft.rpc.protocol.yi;
 
-import com.github.jraft.rpc.Exporter;
-import com.github.jraft.rpc.Invoker;
-import com.github.jraft.rpc.Protocol;
-import com.github.jraft.rpc.RpcException;
+import com.github.jraft.remoting.RemotingException;
+import com.github.jraft.remoting.exchange.ExchangeClient;
+import com.github.jraft.remoting.exchange.ExchangeHandler;
+import com.github.jraft.remoting.exchange.ExchangeServer;
+import com.github.jraft.remoting.exchange.header.HeadExchanger;
+import com.github.jraft.rpc.*;
 import com.github.jraft.rpc.protocol.RpcInvocation;
 
 import java.io.EOFException;
@@ -17,15 +19,61 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * TODO ����дע��
- * date��2015/8/21-11:52
- * author��weijianjun
- * Copyright (c) 2014��������-��Ȩ����
+ *
+ * date 2015/8/21-11:52
+ * author weijianjun
+ * Copyright (c) 2014
  */
 
 public class YiProtocol  implements Protocol{
 
     private Map<String ,Exporter>   exporterMap = new HashMap<String,Exporter>();
+
+
+    ExchangeServer server;
+
+
+    ExchangeClient client;
+
+
+    private ExchangeHandler exchangeHandler = new ExchangeHandler() {
+
+        /**
+         * 服务器端对请求响应
+         * @param msg
+         * @return
+         */
+        public   Object reply(Object msg) throws RemotingException {
+            if(msg instanceof Invocation){
+                Invocation invocation = (Invocation) msg;
+
+                Invoker<?> invoker = getInvoker(invocation);
+                return     invoker.invoke(invocation);
+            }
+            throw  new RemotingException("msg error");
+        }
+
+        private    Invoker<?> getInvoker(Invocation invocation) {
+
+            String interfaceName = invocation.getInterfaceName();
+
+            Exporter<?> exporter = exporterMap.get(interfaceName);
+
+            return exporter.getInvoker();
+
+        }
+        @Override
+        public void sent(Object message) throws RemotingException {
+
+        }
+
+        @Override
+        public void received(Object message) throws RemotingException {
+
+        }
+    };
+
+
 
     @Override
     public int getDefaultPort() {
@@ -46,67 +94,28 @@ public class YiProtocol  implements Protocol{
 
     @Override
     public <T> Invoker<T> refer(Class<T> type) {
-        YiInvoker<T> yiInvoker = new YiInvoker<T>(type,createClient("localhost",getDefaultPort()));
+        YiInvoker<T> yiInvoker = new YiInvoker<T>(type,getClient("localhost", getDefaultPort()));
         return yiInvoker;
     }
 
     private void openServer ( int port) throws Exception{
-        ServerSocket serverSocket = new ServerSocket(port);
-        while(true) {
-            final Socket socket = serverSocket.accept();
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    while(true){
-                        try {
-                            ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-                            String interfaceName = ois.readUTF();
-                            RpcInvocation invocation = (RpcInvocation) ois.readObject();
-                            Exporter<?> exporter = exporterMap.get(interfaceName);
-                            Invoker<?> invoker = exporter.getInvoker();
-                            Object result =  invoker.invoke(invocation);
-                            ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-                            try {
-                                oos.writeObject(result);
-                            } catch (Throwable throwable) {
-                                oos.writeObject(throwable);
-                            }
-                            oos.flush();
-
-                        } catch (EOFException e) {
-                            System.out.println("client disconnet, close");
-                            try {
-                                socket.close();
-                            } catch (Exception exx) {
-                                exx.printStackTrace();
-                            }
-                            break;
-                        }catch (Exception e) {
-                            System.out.println("client disconnet, close");
-                            try {
-                            socket.close();
-                            } catch (Exception exx) {
-                                exx.printStackTrace();
-                            }
-                        }
-                        finally {
-                            try {
-//                            socket.close();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                }
-            }).start();
-        }
+        HeadExchanger exchanger = new HeadExchanger();
+        server = exchanger.bind("localhost",port,exchangeHandler);
     }
 
-    private Socket createClient(String serverHost, int port){
+
+    private ExchangeClient getClient(String serverHost, int port){
+        if(client == null){
+            client = createClient(serverHost,port);
+        }
+        return  client;
+    }
+
+    private ExchangeClient createClient(String serverHost, int port){
         try {
-            Socket socket = new Socket(serverHost,port);
-            return socket;
-        } catch (IOException e) {
+            HeadExchanger exchanger = new HeadExchanger();
+            return exchanger.connect(serverHost,port,exchangeHandler) ;
+        } catch (RemotingException e) {
             throw   new RpcException("socket error",e);
         }
     }

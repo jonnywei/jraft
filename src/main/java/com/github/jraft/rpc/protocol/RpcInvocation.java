@@ -8,10 +8,10 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
- * 序列号对象
- * date：2015/8/21-14:30
- * author：weijianjun
- * Copyright (c) 2014畅游天下-版权所有
+ *
+ * date 2015/8/21-14:30
+ * author weijianjun
+ * Copyright (c) 2014
  */
 
 public class RpcInvocation implements Invocation, Serializable {
@@ -22,17 +22,20 @@ public class RpcInvocation implements Invocation, Serializable {
 
     private Object[]             arguments;
 
+    private String               interfaceName;
 
-    public RpcInvocation(Method method, Object[] arguments) {
-        this(method.getName(), method.getParameterTypes(), arguments);
+    public RpcInvocation(Method method, Object[] arguments,String interfaceName) {
+        this(method.getName(), method.getParameterTypes(), arguments, interfaceName);
     }
 
-    public RpcInvocation(String methodName, Class<?>[] parameterTypes, Object[] arguments){
+    public RpcInvocation(String methodName, Class<?>[] parameterTypes, Object[] arguments,String interfaceName){
         this.methodName = methodName;
         this.parameterTypes = parameterTypes;
         this.arguments = arguments;
-
+        this.interfaceName = interfaceName;
     }
+
+
     @Override
     public String getMethodName() {
         return methodName;
@@ -56,5 +59,14 @@ public class RpcInvocation implements Invocation, Serializable {
     @Override
     public Invoker<?> getInvoker() {
         return null;
+    }
+
+    @Override
+    public String getInterfaceName() {
+        return interfaceName;
+    }
+
+    public void setInterfaceName(String interfaceName) {
+        this.interfaceName = interfaceName;
     }
 }

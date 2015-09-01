@@ -4,7 +4,6 @@ import com.github.jraft.remoting.Client;
 import com.github.jraft.remoting.RemotingException;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
@@ -19,9 +18,24 @@ public class BioClient implements Client {
 
     InetSocketAddress  inetSocketAddress ;
     Socket socket;
-    public BioClient(String host, int port)  throws RemotingException {
+
+    BioCodec codec ;
+
+
+    BioHandler bioHandler;
+
+    /**
+     * Running state of the endpoint.
+     */
+    protected volatile boolean running = false;
+
+
+    public BioClient(String host, int port ,BioHandler handler)  throws RemotingException {
         try {
             inetSocketAddress = new InetSocketAddress(host,port);
+
+            bioHandler = handler;
+
             doOpen();
             doConnect();
         } catch (Throwable e) {
@@ -36,8 +50,13 @@ public class BioClient implements Client {
 
 
     private  void doConnect() throws Throwable{
-         socket = new Socket();
-         socket. connect(inetSocketAddress);
+        socket = new Socket();
+        socket. connect(inetSocketAddress);
+        bioHandler.setSocket(socket);
+        Thread reciverThread = new Thread(new Receiver(),"client-receiver");
+        reciverThread.setDaemon(true);
+        reciverThread.start();
+
     }
 
 
@@ -48,17 +67,12 @@ public class BioClient implements Client {
 
     @Override
     public void send(Object message) throws RemotingException {
-        BioCodec codec = new BioCodec();
-        try {
-            codec.encode(socket.getOutputStream(),message);
-        } catch (IOException e) {
-            throw new RemotingException("codec error", e);
-        }
+      bioHandler.sent(message);
     }
 
     @Override
     public void send(Object message, boolean sent) throws RemotingException {
-
+        send(message);
     }
 
     @Override
@@ -74,5 +88,17 @@ public class BioClient implements Client {
     @Override
     public boolean isClosed() {
         return false;
+    }
+
+
+
+    protected class  Receiver implements Runnable {
+
+        @Override
+        public void run() {
+            while (running){
+                bioHandler.received();
+            }
+        }
     }
 }

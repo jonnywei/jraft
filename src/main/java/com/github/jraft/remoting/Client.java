@@ -28,7 +28,7 @@ public interface Client {
      * send message.
      *
      * @param message
-     * @param sent 是否已经发送完成
+     * @param sent 是否已经发送完成 。false，只放到io缓冲区即可
      */
     void send(Object message, boolean sent) throws RemotingException;
 

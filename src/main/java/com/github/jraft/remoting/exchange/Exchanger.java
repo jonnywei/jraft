@@ -18,7 +18,7 @@ public interface Exchanger {
      * @param port
      * @return
      */
-    ExchangeServer bind(String host, int port) throws RemotingException;
+    ExchangeServer bind(String host, int port, ExchangeHandler handler) throws RemotingException;
 
 
     /**
@@ -27,5 +27,5 @@ public interface Exchanger {
      * @param port
      * @return
      */
-    ExchangeClient connect(String host, int port) throws RemotingException;
+    ExchangeClient connect(String host, int port, ExchangeHandler handler) throws RemotingException;
 }

@@ -7,10 +7,10 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
 /**
- * TODO ÕâÀïÐ´×¢ÊÍ
- * date£º2015/8/21-15:32
- * author£ºweijianjun
- * Copyright (c) 2014³©ÓÎÌìÏÂ-°æÈ¨ËùÓÐ
+ * TODO ï¿½ï¿½ï¿½ï¿½Ð´×¢ï¿½ï¿½
+ * dateï¿½ï¿½2015/8/21-15:32
+ * authorï¿½ï¿½weijianjun
+ * Copyright (c) 2014ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½-ï¿½ï¿½È¨ï¿½ï¿½ï¿½ï¿½
  */
 
 public class InvokerInvocationHandler implements InvocationHandler {
@@ -23,7 +23,7 @@ public class InvokerInvocationHandler implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        Result result =  invoker.invoke(new RpcInvocation(method,args));
+        Result result =  invoker.invoke(new RpcInvocation(method,args,invoker.getInterface().getName()));
         return result.recreate();
     }
 }

@@ -2,7 +2,8 @@ package com.github.jraft.remoting.transport.bio;
 
 import com.github.jraft.remoting.RemotingException;
 import com.github.jraft.remoting.Server;
-import com.github.jraft.remoting.exchange.Request;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -19,6 +20,9 @@ import java.util.concurrent.Executors;
  */
 
 public class BioServer implements Server {
+
+    private static final Logger logger = LoggerFactory.getLogger(BioServer.class);
+
 
     private ServerSocket serverSocket;
 
@@ -41,13 +45,15 @@ public class BioServer implements Server {
      */
     protected volatile boolean running = false;
 
+    BioHandler bioHandler;
 
 
-    public BioServer(String host, int port) throws RemotingException {
+    public BioServer(String host, int port, BioHandler handler) throws RemotingException {
 
         try {
             serverSocket  = new ServerSocket(port,backlog,InetAddress.getByName(host));
             executor = Executors.newFixedThreadPool(executorThreadCount);
+            bioHandler =  handler;
             running = true;
             doOpen();
         } catch (Throwable e) {
@@ -61,6 +67,7 @@ public class BioServer implements Server {
             Thread acceptorThread = new Thread(new Acceptor(),"Bio-Acceptor" +i);
             acceptorThread.setDaemon(true);
             acceptorThread.start();
+            logger.info("server start");
         }
     }
 
@@ -152,11 +159,8 @@ public class BioServer implements Server {
             try {
                 BioCodec bioCodec = new BioCodec();
                 Object object = bioCodec.decode(socket.getInputStream());
-                if(object instanceof Request){
-
-                }
-
-            } catch (IOException e) {
+                bioHandler.received(object);
+            } catch ( Exception e) {
                 e.printStackTrace();
             }
         }

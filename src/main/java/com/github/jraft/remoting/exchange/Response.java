@@ -25,6 +25,14 @@ public class Response implements Serializable {
         mId = id;
     }
 
+    public long getId() {
+        return mId;
+    }
+
+    public void setId(long id) {
+        mId = id;
+    }
+
 
     public Object getResult() {
         return mResult;

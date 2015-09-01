@@ -24,6 +24,8 @@ public interface Invocation {
 
     Map<String, String > getAttachments();
 
+    String getInterfaceName();
+
     /**
      * 得到当前的调用者
      * @return

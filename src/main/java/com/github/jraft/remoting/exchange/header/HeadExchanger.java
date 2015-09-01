@@ -2,6 +2,7 @@ package com.github.jraft.remoting.exchange.header;
 
 import com.github.jraft.remoting.RemotingException;
 import com.github.jraft.remoting.exchange.ExchangeClient;
+import com.github.jraft.remoting.exchange.ExchangeHandler;
 import com.github.jraft.remoting.exchange.ExchangeServer;
 import com.github.jraft.remoting.exchange.Exchanger;
 import com.github.jraft.remoting.transport.bio.BioTransporter;
@@ -15,12 +16,12 @@ import com.github.jraft.remoting.transport.bio.BioTransporter;
 
 public class HeadExchanger implements Exchanger {
     @Override
-    public ExchangeServer bind(String host, int port) throws RemotingException {
-        return new HeaderExchangeServer((new BioTransporter()).bind(host,port));
+    public ExchangeServer bind(String host, int port , ExchangeHandler handler) throws RemotingException {
+        return new HeaderExchangeServer((new BioTransporter()).bind(host,port,handler));
     }
 
     @Override
-    public ExchangeClient connect(String host, int port) throws RemotingException {
-        return  new HeaderExchangeClient((new BioTransporter()).connect(host, port));
+    public ExchangeClient connect(String host, int port, ExchangeHandler handler) throws RemotingException {
+        return  new HeaderExchangeClient((new BioTransporter()).connect(host, port,handler));
     }
 }

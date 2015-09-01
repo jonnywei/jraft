@@ -25,6 +25,7 @@ public class RpcProtocolTest {
         HelloWordServiceImpl helloWordService = new HelloWordServiceImpl();
         ServiceConfig<HelloWorldService> serviceConfig = new ServiceConfig<HelloWorldService>(HelloWorldService.class, helloWordService);
         serviceConfig.export();
+        System.in.read();
     }
 
 }
