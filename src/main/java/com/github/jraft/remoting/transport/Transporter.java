@@ -1,7 +1,7 @@
 package com.github.jraft.remoting.transport;
 
 import com.github.jraft.remoting.Client;
-import com.github.jraft.remoting.IoHandler;
+import com.github.jraft.remoting.ChannelHandler;
 import com.github.jraft.remoting.RemotingException;
 import com.github.jraft.remoting.Server;
 
@@ -21,7 +21,7 @@ public interface Transporter {
      * @param port
      * @return
      */
-    Server bind(String host, int port,IoHandler handler)  throws RemotingException;
+    Server bind(String host, int port,ChannelHandler handler)  throws RemotingException;
 
 
     /**
@@ -30,5 +30,5 @@ public interface Transporter {
      * @param port
      * @return
      */
-    Client connect(String host, int port,IoHandler handler)  throws RemotingException;
+    Client connect(String host, int port,ChannelHandler handler)  throws RemotingException;
 }

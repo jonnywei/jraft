@@ -7,7 +7,7 @@ package com.github.jraft.remoting;
  * Copyright (c) 2014畅游天下-版权所有
  */
 
-public interface IoHandler {
+public interface ChannelHandler {
 
 
     /**
@@ -15,12 +15,12 @@ public interface IoHandler {
      *
      * @param message message.
      */
-    void sent(Object message) throws RemotingException;
+    void sent(Channel channel, Object message) throws RemotingException;
 
     /**
      * on message received.
      * @param message message.
      */
-    void received( Object message) throws RemotingException;
+    void received(Channel channel,  Object message) throws RemotingException;
 
 }

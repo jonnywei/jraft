@@ -45,15 +45,15 @@ public class BioServer implements Server {
      */
     protected volatile boolean running = false;
 
-    BioHandler bioHandler;
+    BioProcessor  bioProcessor;
 
 
-    public BioServer(String host, int port, BioHandler handler) throws RemotingException {
+    public BioServer(String host, int port, BioChannelHandler handler) throws RemotingException {
 
         try {
             serverSocket  = new ServerSocket(port,backlog,InetAddress.getByName(host));
             executor = Executors.newFixedThreadPool(executorThreadCount);
-            bioHandler =  handler;
+            bioProcessor =  new BioProcessor(handler);
             running = true;
             doOpen();
         } catch (Throwable e) {
@@ -156,10 +156,11 @@ public class BioServer implements Server {
 
         @Override
         public void run() {
+            System.out.println("process socket"  + socket);
             try {
-                BioCodec bioCodec = new BioCodec();
-                Object object = bioCodec.decode(socket.getInputStream());
-                bioHandler.received(object);
+                while (running){
+                    bioProcessor.messageReceived(socket);
+                }
             } catch ( Exception e) {
                 e.printStackTrace();
             }

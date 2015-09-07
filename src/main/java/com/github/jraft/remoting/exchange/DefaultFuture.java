@@ -4,6 +4,10 @@ import com.github.jraft.remoting.RemotingException;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * TODO 这里写注释
@@ -20,6 +24,15 @@ public class DefaultFuture implements ResponseFuture {
 
     private int timeout;
 
+    private final Lock lock = new ReentrantLock();
+
+    private final Condition done = lock.newCondition();
+
+    private final int DEFAULT_TIMEOUT = 10*1000;
+
+
+    private volatile Response                     response;
+
 
     public DefaultFuture( Request request, int timeout) {
         this.request = request;
@@ -29,22 +42,32 @@ public class DefaultFuture implements ResponseFuture {
 
     @Override
     public Object get() throws RemotingException {
-        return null;
+        return get(DEFAULT_TIMEOUT);
     }
 
     @Override
     public Object get(int timeoutInMillis) throws RemotingException {
-        return null;
+        lock.lock();
+        try {
+            while (! isDone()){
+                done.await(timeoutInMillis, TimeUnit.MILLISECONDS);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            lock.unlock();
+        }
+        return response.getResult();
     }
 
     @Override
     public boolean isDone() {
-        return false;
+        return response != null;
     }
 
 
     private void doReceived(Response response){
-
+        this.response = response;
     }
 
     public static void received( Response response) {

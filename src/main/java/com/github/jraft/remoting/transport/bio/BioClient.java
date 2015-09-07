@@ -3,7 +3,6 @@ package com.github.jraft.remoting.transport.bio;
 import com.github.jraft.remoting.Client;
 import com.github.jraft.remoting.RemotingException;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
@@ -17,12 +16,10 @@ import java.net.Socket;
 public class BioClient implements Client {
 
     InetSocketAddress  inetSocketAddress ;
+
     Socket socket;
 
-    BioCodec codec ;
-
-
-    BioHandler bioHandler;
+    BioProcessor bioProcessor;
 
     /**
      * Running state of the endpoint.
@@ -30,11 +27,11 @@ public class BioClient implements Client {
     protected volatile boolean running = false;
 
 
-    public BioClient(String host, int port ,BioHandler handler)  throws RemotingException {
+    public BioClient(String host, int port ,BioChannelHandler handler)  throws RemotingException {
         try {
             inetSocketAddress = new InetSocketAddress(host,port);
 
-            bioHandler = handler;
+            bioProcessor = new BioProcessor(handler);
 
             doOpen();
             doConnect();
@@ -52,7 +49,6 @@ public class BioClient implements Client {
     private  void doConnect() throws Throwable{
         socket = new Socket();
         socket. connect(inetSocketAddress);
-        bioHandler.setSocket(socket);
         Thread reciverThread = new Thread(new Receiver(),"client-receiver");
         reciverThread.setDaemon(true);
         reciverThread.start();
@@ -67,7 +63,7 @@ public class BioClient implements Client {
 
     @Override
     public void send(Object message) throws RemotingException {
-      bioHandler.sent(message);
+      bioProcessor.writeRequested(socket, message);
     }
 
     @Override
@@ -97,7 +93,11 @@ public class BioClient implements Client {
         @Override
         public void run() {
             while (running){
-                bioHandler.received();
+                try {
+                    bioProcessor.messageReceived(socket);
+                } catch ( Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

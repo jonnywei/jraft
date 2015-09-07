@@ -1,6 +1,6 @@
 package com.github.jraft.remoting.exchange;
 
-import com.github.jraft.remoting.IoHandler;
+import com.github.jraft.remoting.ChannelHandler;
 import com.github.jraft.remoting.RemotingException;
 
 /**
@@ -10,7 +10,7 @@ import com.github.jraft.remoting.RemotingException;
  * Copyright (c) 2014畅游天下-版权所有
  */
 
-public interface ExchangeHandler  extends IoHandler {
+public interface ExchangeHandler  extends ChannelHandler {
 
     Object reply(Object request) throws RemotingException;
 }

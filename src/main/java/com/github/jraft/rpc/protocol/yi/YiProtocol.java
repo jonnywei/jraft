@@ -1,5 +1,6 @@
 package com.github.jraft.rpc.protocol.yi;
 
+import com.github.jraft.remoting.Channel;
 import com.github.jraft.remoting.RemotingException;
 import com.github.jraft.remoting.exchange.ExchangeClient;
 import com.github.jraft.remoting.exchange.ExchangeHandler;
@@ -38,6 +39,16 @@ public class YiProtocol  implements Protocol{
 
     private ExchangeHandler exchangeHandler = new ExchangeHandler() {
 
+        @Override
+        public void sent(Channel channel, Object message) throws RemotingException {
+
+        }
+
+        @Override
+        public void received(Channel channel, Object message) throws RemotingException {
+
+        }
+
         /**
          * 服务器端对请求响应
          * @param msg
@@ -62,15 +73,7 @@ public class YiProtocol  implements Protocol{
             return exporter.getInvoker();
 
         }
-        @Override
-        public void sent(Object message) throws RemotingException {
 
-        }
-
-        @Override
-        public void received(Object message) throws RemotingException {
-
-        }
     };
 
 
